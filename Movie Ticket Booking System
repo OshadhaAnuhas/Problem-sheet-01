@@ -1,0 +1,116 @@
+ class Ticket {
+    private int ticketNumber;
+    private String customerName;
+    private int seatNumber;
+	
+    public Ticket(int ticketNumber, String customerName, int seatNumber) {
+        this.ticketNumber = ticketNumber;
+        this.customerName = customerName;
+        this.seatNumber = seatNumber;
+    }
+
+ 
+    public int getTicketNumber() {
+        return ticketNumber;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public int getSeatNumber() {
+        return seatNumber;
+    }
+
+    public String toString() {
+        return "Ticket No: " + ticketNumber + ", Name: " + customerName + ", Seat No: " + seatNumber;
+    }
+}
+ class BookingSystem {
+    private Ticket[] tickets; 
+    private int bookingCount; 
+
+    public BookingSystem() {
+        tickets = new Ticket[10];
+        bookingCount = 0;
+    }
+
+    
+    public void bookTicket(int ticketNumber, String customerName, int seatNumber) {
+        
+        if (seatNumber < 1 || seatNumber > 10) {
+            System.out.println("Invalid seat number. Must be between 1 and 10.");
+            return;
+        }
+
+        
+        for (int i = 0; i < bookingCount; i++) {
+            if (tickets[i].getSeatNumber() == seatNumber) {
+                System.out.println("Seat number " + seatNumber + " is already booked.");
+                return;
+            }
+        }
+
+       
+        if (bookingCount < tickets.length) {
+            tickets[bookingCount] = new Ticket(ticketNumber, customerName, seatNumber);
+            bookingCount++;
+            System.out.println("Ticket booked successfully for " + customerName + " at seat " + seatNumber + ".");
+        } else {
+            System.out.println("All seats are booked. Booking failed.");
+        }
+    }
+
+    public void cancelTicket(int ticketNumber) {
+        boolean found = false;
+
+        for (int i = 0; i < bookingCount; i++) {
+            if (tickets[i].getTicketNumber() == ticketNumber) {
+                found = true;
+                System.out.println("Cancelling ticket number: " + ticketNumber);
+
+                for (int j = i; j < bookingCount - 1; j++) {
+                    tickets[j] = tickets[j + 1];
+                }
+
+                tickets[bookingCount - 1] = null;
+                bookingCount--;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Ticket number " + ticketNumber + " not found.");
+        }
+    }
+
+    public void displayBookings() {
+        System.out.println("\nCurrent Bookings:");
+        if (bookingCount == 0) {
+            System.out.println("No tickets booked.");
+        } else {
+            for (int i = 0; i < bookingCount; i++) {
+                System.out.println(tickets[i].toString());
+            }
+        }
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        BookingSystem bookingSystem = new BookingSystem();
+
+        
+        bookingSystem.bookTicket(1, "Alice", 1);
+        bookingSystem.bookTicket(2, "Bob", 2);
+        bookingSystem.bookTicket(3, "Carol", 3);
+
+       
+        bookingSystem.cancelTicket(2);
+
+       
+        bookingSystem.bookTicket(4, "David", 2);
+
+        
+        bookingSystem.displayBookings();
+    }
+}
